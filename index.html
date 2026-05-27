@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stii エステ yasuko | デジまかせ サンプルサイト</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Noto Sans JP', 'sans-serif'],
+            serif: ['Noto Serif JP', 'serif']
+          },
+          colors: {
+            ink: '#08070c',
+            night: '#11101a',
+            plum: '#9b78a9',
+            grape: '#6d4a7a',
+            lavender: '#dbc8e8',
+            rose: '#f3b7c4',
+            peach: '#ffd8c7',
+            cream: '#fff8f4'
+          },
+          boxShadow: {
+            soft: '0 24px 70px rgba(48,28,63,.22)',
+            glow: '0 0 45px rgba(219,200,232,.55)',
+            pink: '0 18px 60px rgba(243,183,196,.28)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background:#08070c; color:#fff; }
+    .noise:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;opacity:.05;background-image:url('data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%22.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/%3E%3C/svg%3E');}
+    .glass { background: rgba(255,255,255,.08); backdrop-filter: blur(22px); border:1px solid rgba(255,255,255,.14); }
+    .glass-dark { background: rgba(8,7,12,.64); backdrop-filter: blur(24px); border:1px solid rgba(255,255,255,.12); }
+    .soft-bg { background: radial-gradient(circle at top left, rgba(219,200,232,.55), transparent 32%), radial-gradient(circle at bottom right, rgba(243,183,196,.36), transparent 30%), #fff8f4; }
+    .hero-bg { background: radial-gradient(circle at 16% 20%, rgba(219,200,232,.42), transparent 30%), radial-gradient(circle at 84% 24%, rgba(243,183,196,.30), transparent 28%), linear-gradient(135deg,#07060a 0%,#24142d 52%,#07060a 100%); }
+    .text-grad { background: linear-gradient(90deg,#fff,#e9d5f1,#ffc9d4); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .btn-shine{position:relative;overflow:hidden}.btn-shine:before{content:"";position:absolute;top:0;left:-120%;width:70%;height:100%;transform:skewX(-25deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:shine 3.2s infinite}.btn-shine:hover:before{animation-duration:1.2s}@keyframes shine{0%{left:-120%}45%,100%{left:140%}}
+    .float { animation: float 5.4s ease-in-out infinite; }
+    .float2 { animation: float 6.6s ease-in-out infinite reverse; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-13px)} }
+    .marquee { animation: marquee 22s linear infinite; }
+    @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    .intro { position:fixed; inset:0; z-index:100; background:#08070c; display:grid; place-items:center; animation:introOut .9s ease forwards 2.35s; }
+    .intro-logo { animation: logoPop 2.05s cubic-bezier(.2,1,.2,1) forwards; }
+    .intro-line { transform:scaleX(0); transform-origin:left; animation:lineIn 1.2s ease forwards .55s; }
+    @keyframes introOut{to{opacity:0;visibility:hidden;transform:scale(1.05)}}
+    @keyframes logoPop{0%{opacity:0;filter:blur(18px);transform:translateY(24px) scale(.92)}35%{opacity:1;filter:blur(0);transform:translateY(0) scale(1)}100%{opacity:1;transform:translateY(-4px) scale(1)}}
+    @keyframes lineIn{to{transform:scaleX(1)}}
+    .reveal { opacity:0; transform: translateY(28px); transition:.9s cubic-bezier(.2,1,.2,1); }
+    .reveal.show { opacity:1; transform: translateY(0); }
+    .reveal-left { opacity:0; transform: translateX(-32px); transition:.9s cubic-bezier(.2,1,.2,1); }
+    .reveal-right { opacity:0; transform: translateX(32px); transition:.9s cubic-bezier(.2,1,.2,1); }
+    .reveal-left.show,.reveal-right.show { opacity:1; transform: translateX(0); }
+    .tilt-card { transform-style:preserve-3d; transition:.35s ease; }
+    .tilt-card:hover { transform: translateY(-8px) rotateX(3deg) rotateY(-3deg); }
+    .menu-pill.active { background:#08070c; color:#fff; }
+    .input { width:100%; border:1px solid rgba(8,7,12,.13); background:rgba(255,255,255,.78); border-radius:1.2rem; padding:1rem 1.1rem; outline:none; transition:.2s ease; }
+    .input:focus { border-color:#9b78a9; box-shadow:0 0 0 4px rgba(155,120,169,.14); background:#fff; }
+  </style>
+</head>
+<body class="font-sans overflow-x-hidden noise">
+  <div class="intro">
+    <div class="text-center px-6">
+      <div class="intro-logo">
+        <p class="text-white/50 tracking-[.35em] text-xs mb-4">PRIVATE BEAUTY SALON</p>
+        <h1 class="font-serif text-6xl md:text-8xl font-black text-grad">Stii</h1>
+        <div class="intro-line h-px bg-gradient-to-r from-transparent via-lavender to-transparent mt-6 w-72 max-w-full mx-auto"></div>
+        <p class="mt-5 text-white/70 text-sm tracking-[.18em]">KOGAO / EAR JEWELRY / RELAXATION</p>
+      </div>
+    </div>
+  </div>
+
+  <header class="fixed top-0 left-0 right-0 z-50 bg-ink/65 backdrop-blur-xl border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-rose to-lavender grid place-items-center text-ink font-serif font-black shadow-glow">Stii</div>
+        <div class="leading-tight">
+          <p class="font-serif text-lg font-bold tracking-wide">Stii エステ</p>
+          <p class="text-[10px] text-white/60 tracking-[.25em] uppercase">Beauty Salon</p>
+        </div>
+      </a>
+      <nav class="hidden md:flex items-center gap-7 text-sm text-white/75">
+        <a href="#attract" class="hover:text-white">集客</a>
+        <a href="#menu" class="hover:text-white">メニュー</a>
+        <a href="#reserve" class="hover:text-white">予約</a>
+        <a href="#access" class="hover:text-white">アクセス</a>
+      </nav>
+      <a href="#reserve" class="btn-shine px-5 py-2 rounded-full bg-white text-ink text-sm font-bold hover:bg-lavender transition">予約フォーム</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero-bg min-h-screen pt-28 pb-14 relative overflow-hidden">
+      <div class="absolute inset-0 bg-cover bg-center opacity-35" style="background-image:url('https://images.unsplash.com/photo-1596178065887-1198b6148b2b?auto=format&fit=crop&w=1800&q=85');"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-ink via-ink/78 to-ink/38"></div>
+      <div class="absolute inset-0 opacity-[.08]" style="background-image:linear-gradient(#fff 1px, transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px);background-size:44px 44px;"></div>
+      <div class="absolute -right-20 top-28 w-72 h-72 rounded-full bg-lavender/30 blur-3xl"></div>
+      <div class="absolute -left-24 bottom-0 w-80 h-80 rounded-full bg-rose/20 blur-3xl"></div>
+
+      <div class="max-w-7xl mx-auto px-4 relative grid lg:grid-cols-[1.03fr_.97fr] gap-10 items-center min-h-[78vh]">
+        <div class="reveal-left">
+          <p class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm text-white/80 mb-6">下関市長府中之町のプライベート美容サロン</p>
+          <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl font-black leading-[1.04] tracking-tight">
+            鏡を見るのが、<br>
+            <span class="text-grad">少し楽しみになる。</span>
+          </h1>
+          <p class="mt-6 text-white/80 text-base md:text-lg leading-8 max-w-xl">
+            小顔コルギ、耳つぼジュエリー、フェイシャルケア。写真の世界観を活かして、上品で予約しやすい美容サロンサイトへ。
+          </p>
+          <div class="mt-8 flex flex-col sm:flex-row gap-3">
+            <a href="#reserve" class="btn-shine rounded-full bg-white text-ink px-8 py-4 font-bold text-center shadow-glow">予約フォームへ</a>
+            <a href="#menu" class="rounded-full glass px-8 py-4 font-bold text-center hover:bg-white/15 transition">メニューを見る</a>
+          </div>
+        </div>
+
+        <div class="relative reveal-right">
+          <div class="float relative mx-auto max-w-md rounded-[2.7rem] p-4 glass shadow-soft">
+            <div class="rounded-[2.2rem] overflow-hidden bg-white/10 p-3">
+              <div class="aspect-[4/5] rounded-[1.8rem] bg-cover bg-center relative overflow-hidden" style="background-image:url('https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=1000&q=85');">
+                <div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent"></div>
+                <div class="absolute left-5 right-5 bottom-5">
+                  <p class="text-xs tracking-[.25em] text-white/70 font-black">PRIVATE BEAUTY SALON</p>
+                  <p class="font-serif text-4xl font-black mt-2">Stii</p>
+                  <p class="text-white/70 text-sm mt-2">Kogao / Ear Jewelry / Facial Care</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="absolute -bottom-8 -left-3 md:left-4 glass-dark rounded-3xl p-5 max-w-xs shadow-pink">
+            <p class="font-serif text-2xl font-black">写真で伝わる、上質感。</p>
+            <p class="text-white/60 text-sm mt-2">サロンの雰囲気をそのまま予約につなげる。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="bg-white text-ink overflow-hidden py-4 border-y border-black/10">
+      <div class="marquee whitespace-nowrap flex gap-10 text-sm font-black tracking-[.25em] uppercase">
+        <span>Instagram Attraction</span><span>Beauty Menu</span><span>Mail Reservation</span><span>Before After</span><span>Private Salon</span>
+        <span>Instagram Attraction</span><span>Beauty Menu</span><span>Mail Reservation</span><span>Before After</span><span>Private Salon</span>
+      </div>
+    </div>
+
+    <section id="attract" class="soft-bg text-ink py-24 relative overflow-hidden">
+      <div class="absolute left-1/2 top-10 w-[520px] h-[520px] -translate-x-1/2 bg-lavender/30 blur-3xl rounded-full"></div>
+      <div class="max-w-7xl mx-auto px-4 relative">
+        <div class="reveal text-center max-w-3xl mx-auto mb-12">
+          <p class="text-plum font-black tracking-[.25em] text-xs uppercase">Beauty Salon</p>
+          <h2 class="font-serif text-4xl md:text-6xl font-black mt-3">小顔も、癒しも、可愛さも。</h2>
+          <p class="text-black/60 leading-8 mt-6">はじめての方でも雰囲気が伝わるように、施術・空間・メニューを上品に見せるサロンサイト。</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-5">
+          <article class="tilt-card reveal rounded-[2rem] bg-white overflow-hidden shadow-soft">
+            <div class="h-64 bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&w=900&q=80');"></div>
+            <div class="p-7">
+              <p class="text-xs text-plum font-black tracking-[.22em]">KOGAO</p>
+              <h3 class="font-serif text-2xl font-black mt-2">フェイスラインケア</h3>
+              <p class="text-black/60 leading-7 mt-3 text-sm">お顔の印象をすっきり整えたい方へ。写真と文章で魅力が伝わる見せ方に。</p>
+            </div>
+          </article>
+          <article class="tilt-card reveal rounded-[2rem] bg-white overflow-hidden shadow-soft">
+            <div class="h-64 bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=900&q=80');"></div>
+            <div class="p-7">
+              <p class="text-xs text-plum font-black tracking-[.22em]">RELAX</p>
+              <h3 class="font-serif text-2xl font-black mt-2">癒しの美容時間</h3>
+              <p class="text-black/60 leading-7 mt-3 text-sm">完全予約制サロンらしい、落ち着き・安心感・上質感をしっかり表現。</p>
+            </div>
+          </article>
+          <article class="tilt-card reveal rounded-[2rem] bg-white overflow-hidden shadow-soft">
+            <div class="h-64 bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=900&q=80');"></div>
+            <div class="p-7">
+              <p class="text-xs text-plum font-black tracking-[.22em]">RESERVE</p>
+              <h3 class="font-serif text-2xl font-black mt-2">予約しやすい導線</h3>
+              <p class="text-black/60 leading-7 mt-3 text-sm">メニュー確認から予約フォームまでスムーズに。スマホでも使いやすい設計。</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="menu" class="bg-ink py-24 relative overflow-hidden">
+      <div class="absolute right-0 top-0 w-96 h-96 bg-plum/20 blur-3xl rounded-full"></div>
+      <div class="max-w-7xl mx-auto px-4 relative">
+        <div class="reveal flex flex-col md:flex-row md:items-end justify-between gap-6 mb-9">
+          <div>
+            <p class="text-lavender font-black tracking-[.25em] text-xs uppercase">Beauty Menu</p>
+            <h2 class="font-serif text-4xl md:text-6xl font-black mt-3">見やすく、選びやすい<br>メニュー表。</h2>
+          </div>
+          <p class="text-white/60 leading-7 max-w-md">料金はサンプルです。実際の価格に差し替えれば、そのまま営業用として見せられます。</p>
+        </div>
+
+        <div class="reveal flex flex-wrap gap-2 mb-8">
+          <button class="menu-pill active px-5 py-3 rounded-full bg-white text-ink font-bold text-sm" data-filter="all">すべて</button>
+          <button class="menu-pill px-5 py-3 rounded-full bg-white/10 text-white font-bold text-sm border border-white/10" data-filter="kogao">小顔・コルギ</button>
+          <button class="menu-pill px-5 py-3 rounded-full bg-white/10 text-white font-bold text-sm border border-white/10" data-filter="ear">耳つぼ</button>
+          <button class="menu-pill px-5 py-3 rounded-full bg-white/10 text-white font-bold text-sm border border-white/10" data-filter="relax">リラク</button>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5" id="menuGrid">
+          <article class="menu-card reveal glass rounded-[2rem] p-5" data-cat="kogao">
+            <div class="h-40 rounded-[1.4rem] bg-gradient-to-br from-lavender to-white/20 grid place-items-center text-5xl">✨</div>
+            <div class="flex items-start justify-between gap-4 mt-5">
+              <div><p class="text-xs text-lavender font-black tracking-[.2em]">POPULAR</p><h3 class="font-serif text-2xl font-black mt-1">小顔コルギ</h3></div>
+              <p class="font-black text-xl">¥8,800〜</p>
+            </div>
+            <p class="text-white/58 leading-7 text-sm mt-3">フェイスラインをすっきり見せたい方に。ビフォーアフター訴求と相性抜群。</p>
+            <a href="#reserve" class="mt-5 inline-flex w-full justify-center rounded-full bg-white text-ink px-5 py-3 font-bold">このメニューで予約</a>
+          </article>
+          <article class="menu-card reveal glass rounded-[2rem] p-5" data-cat="kogao">
+            <div class="h-40 rounded-[1.4rem] bg-gradient-to-br from-rose to-white/20 grid place-items-center text-5xl">🤍</div>
+            <div class="flex items-start justify-between gap-4 mt-5">
+              <div><p class="text-xs text-lavender font-black tracking-[.2em]">FACE LINE</p><h3 class="font-serif text-2xl font-black mt-1">フェイシャル小顔ケア</h3></div>
+              <p class="font-black text-xl">¥6,600〜</p>
+            </div>
+            <p class="text-white/58 leading-7 text-sm mt-3">お顔の印象を整えたい方、大切な予定前のケアにもおすすめ。</p>
+            <a href="#reserve" class="mt-5 inline-flex w-full justify-center rounded-full bg-white text-ink px-5 py-3 font-bold">このメニューで予約</a>
+          </article>
+          <article class="menu-card reveal glass rounded-[2rem] p-5" data-cat="ear">
+            <div class="h-40 rounded-[1.4rem] bg-gradient-to-br from-peach to-white/20 grid place-items-center text-5xl">💎</div>
+            <div class="flex items-start justify-between gap-4 mt-5">
+              <div><p class="text-xs text-lavender font-black tracking-[.2em]">SNS映え</p><h3 class="font-serif text-2xl font-black mt-1">耳つぼジュエリー</h3></div>
+              <p class="font-black text-xl">¥3,300〜</p>
+            </div>
+            <p class="text-white/58 leading-7 text-sm mt-3">可愛い写真で集客しやすいメニュー。初回予約への入口にも。</p>
+            <a href="#reserve" class="mt-5 inline-flex w-full justify-center rounded-full bg-white text-ink px-5 py-3 font-bold">このメニューで予約</a>
+          </article>
+          <article class="menu-card reveal glass rounded-[2rem] p-5" data-cat="relax">
+            <div class="h-40 rounded-[1.4rem] bg-gradient-to-br from-[#d9cfff] to-white/20 grid place-items-center text-5xl">🌙</div>
+            <div class="flex items-start justify-between gap-4 mt-5">
+              <div><p class="text-xs text-lavender font-black tracking-[.2em]">RELAX</p><h3 class="font-serif text-2xl font-black mt-1">ドライヘッドスパ</h3></div>
+              <p class="font-black text-xl">¥5,500〜</p>
+            </div>
+            <p class="text-white/58 leading-7 text-sm mt-3">目の疲れ・頭の重さ・リラックスしたい方に。癒しの導線として設計。</p>
+            <a href="#reserve" class="mt-5 inline-flex w-full justify-center rounded-full bg-white text-ink px-5 py-3 font-bold">このメニューで予約</a>
+          </article>
+          <article class="menu-card reveal glass rounded-[2rem] p-5" data-cat="kogao">
+            <div class="h-40 rounded-[1.4rem] bg-gradient-to-br from-lavender/90 to-rose/50 grid place-items-center text-5xl">🪞</div>
+            <div class="flex items-start justify-between gap-4 mt-5">
+              <div><p class="text-xs text-lavender font-black tracking-[.2em]">SET</p><h3 class="font-serif text-2xl font-black mt-1">小顔＋ヘッドセット</h3></div>
+              <p class="font-black text-xl">¥12,000〜</p>
+            </div>
+            <p class="text-white/58 leading-7 text-sm mt-3">単価アップ用のセットメニュー。新規にもリピーターにも提案しやすい構成。</p>
+            <a href="#reserve" class="mt-5 inline-flex w-full justify-center rounded-full bg-white text-ink px-5 py-3 font-bold">このメニューで予約</a>
+          </article>
+          <article class="menu-card reveal glass rounded-[2rem] p-5" data-cat="ear">
+            <div class="h-40 rounded-[1.4rem] bg-gradient-to-br from-rose/90 to-peach/70 grid place-items-center text-5xl">🎀</div>
+            <div class="flex items-start justify-between gap-4 mt-5">
+              <div><p class="text-xs text-lavender font-black tracking-[.2em]">CAMPAIGN</p><h3 class="font-serif text-2xl font-black mt-1">初回体験メニュー</h3></div>
+              <p class="font-black text-xl">¥2,980〜</p>
+            </div>
+            <p class="text-white/58 leading-7 text-sm mt-3">広告・SNSからの初回来店用。予約ハードルを下げる見せ方。</p>
+            <a href="#reserve" class="mt-5 inline-flex w-full justify-center rounded-full bg-white text-ink px-5 py-3 font-bold">このメニューで予約</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white text-ink py-24">
+      <div class="max-w-7xl mx-auto px-4 grid lg:grid-cols-[.9fr_1.1fr] gap-10 items-center">
+        <div class="reveal-left">
+          <p class="text-plum font-black tracking-[.25em] text-xs uppercase">Before / After</p>
+          <h2 class="font-serif text-4xl md:text-6xl font-black mt-3">変化を見せるから、<br>予約される。</h2>
+          <p class="text-black/60 leading-8 mt-6">投稿素材をただ並べるだけではなく、メニュー・効果イメージ・予約ボタンをセットで見せることで、迷っている人の背中を押します。</p>
+          <div class="mt-8 grid grid-cols-2 gap-3">
+            <div class="rounded-2xl bg-cream p-5"><p class="text-3xl font-black">01</p><p class="text-sm text-black/55 mt-1">悩みを見せる</p></div>
+            <div class="rounded-2xl bg-cream p-5"><p class="text-3xl font-black">02</p><p class="text-sm text-black/55 mt-1">変化を見せる</p></div>
+            <div class="rounded-2xl bg-cream p-5"><p class="text-3xl font-black">03</p><p class="text-sm text-black/55 mt-1">料金を確認</p></div>
+            <div class="rounded-2xl bg-cream p-5"><p class="text-3xl font-black">04</p><p class="text-sm text-black/55 mt-1">予約へ進む</p></div>
+          </div>
+        </div>
+        <div class="reveal-right grid grid-cols-2 gap-4">
+          <div class="rounded-[2rem] bg-lavender p-4 min-h-80 flex flex-col justify-between shadow-soft">
+            <span class="self-start bg-black text-white rounded-xl px-4 py-2 text-sm font-bold">小顔コルギ</span>
+            <div class="space-y-3">
+              <div class="h-28 rounded-2xl bg-white/70 grid place-items-center font-bold">Before</div>
+              <div class="h-28 rounded-2xl bg-white grid place-items-center font-bold">After</div>
+            </div>
+          </div>
+          <div class="rounded-[2rem] bg-rose p-4 min-h-80 flex flex-col justify-between shadow-soft mt-10">
+            <span class="self-start bg-black text-white rounded-xl px-4 py-2 text-sm font-bold">耳つぼ</span>
+            <div class="h-56 rounded-2xl bg-white/70 grid place-items-center text-center font-bold">可愛い写真で<br>集客力UP</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="reserve" class="soft-bg text-ink py-24 relative overflow-hidden">
+      <div class="absolute -left-24 bottom-0 w-96 h-96 bg-rose/30 blur-3xl rounded-full"></div>
+      <div class="max-w-7xl mx-auto px-4 relative grid lg:grid-cols-[.92fr_1.08fr] gap-10 items-start">
+        <div class="reveal-left sticky top-24">
+          <p class="text-plum font-black tracking-[.25em] text-xs uppercase">Mail Reservation</p>
+          <h2 class="font-serif text-4xl md:text-6xl font-black mt-3">メール予約フォームで、<br>取りこぼしを減らす。</h2>
+          <p class="text-black/60 leading-8 mt-6">DMだけだと流れてしまう予約情報を、メニュー・希望日時・連絡先で整理。サロン側も確認しやすくなります。</p>
+          <div class="mt-8 rounded-[2rem] bg-ink text-white p-6 shadow-soft">
+            <p class="font-serif text-2xl font-black">フォーム送信後の流れ</p>
+            <ol class="mt-5 space-y-3 text-white/70 text-sm">
+              <li>1. 希望メニューと日時を入力</li>
+              <li>2. サロンにメールで予約内容が届く</li>
+              <li>3. 返信で日時確定</li>
+            </ol>
+          </div>
+        </div>
+        <form class="reveal-right bg-white rounded-[2.4rem] p-5 md:p-8 shadow-soft" onsubmit="event.preventDefault(); alert('サンプルです。実制作時はメール送信機能を接続します。');">
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-bold mb-2">お名前</label>
+              <input class="input" placeholder="例：山田 花子" required>
+            </div>
+            <div>
+              <label class="block text-sm font-bold mb-2">電話番号</label>
+              <input class="input" placeholder="例：090-0000-0000" required>
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-sm font-bold mb-2">メールアドレス</label>
+              <input class="input" type="email" placeholder="example@mail.com" required>
+            </div>
+            <div>
+              <label class="block text-sm font-bold mb-2">希望メニュー</label>
+              <select class="input" required>
+                <option value="">選択してください</option>
+                <option>小顔コルギ</option>
+                <option>フェイシャル小顔ケア</option>
+                <option>耳つぼジュエリー</option>
+                <option>ドライヘッドスパ</option>
+                <option>小顔＋ヘッドセット</option>
+                <option>相談して決めたい</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-bold mb-2">ご来店回数</label>
+              <select class="input">
+                <option>初めて</option>
+                <option>2回目以降</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-bold mb-2">第1希望日</label>
+              <input class="input" type="date" required>
+            </div>
+            <div>
+              <label class="block text-sm font-bold mb-2">希望時間</label>
+              <select class="input" required>
+                <option value="">選択してください</option>
+                <option>10:00〜</option><option>11:00〜</option><option>12:00〜</option><option>13:00〜</option><option>14:00〜</option><option>15:00〜</option><option>16:00〜</option>
+              </select>
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-sm font-bold mb-2">ご相談内容</label>
+              <textarea class="input min-h-32" placeholder="気になるメニュー、お悩み、ご希望などをご入力ください"></textarea>
+            </div>
+          </div>
+          <button class="btn-shine mt-6 w-full rounded-full bg-ink text-white py-4 font-black text-lg shadow-glow">この内容で予約相談する</button>
+          <p class="text-center text-xs text-black/45 mt-4">※サンプルのため送信はされません。実制作時にメール送信・LINE連携が可能です。</p>
+        </form>
+      </div>
+    </section>
+
+    <section id="access" class="bg-ink py-24">
+      <div class="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-8">
+        <div class="reveal-left">
+          <p class="text-lavender font-black tracking-[.25em] text-xs uppercase">Access</p>
+          <h2 class="font-serif text-4xl md:text-6xl font-black mt-3">Stii エステ</h2>
+          <div class="mt-8 space-y-4 text-white/70">
+            <p>住所：山口県下関市長府中之町6-4</p>
+            <p>営業時間：10:00〜17:00</p>
+            <p>予約：メールフォーム / Instagram DM / LINE</p>
+          </div>
+        </div>
+        <div class="reveal-right rounded-[2rem] glass p-5">
+          <div class="aspect-[4/3] rounded-[1.5rem] bg-white/10 grid place-items-center text-white/60 text-center px-6">
+            Google Map 埋め込みエリア<br>
+            ※実制作時に店舗住所の地図を配置
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-ink border-t border-white/10 py-10">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between gap-4 text-white/55 text-sm">
+      <p>© 2026 Stii エステ yasuko. Sample site by デジまかせ.</p>
+      <p>Instagram集客 / メニュー表 / メール予約フォーム</p>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting) entry.target.classList.add('show');
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => observer.observe(el));
+
+    document.querySelectorAll('.menu-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.menu-pill').forEach(b => {
+          b.classList.remove('active');
+          b.classList.add('bg-white/10','text-white','border','border-white/10');
+        });
+        btn.classList.add('active');
+        btn.classList.remove('bg-white/10','text-white','border','border-white/10');
+        const filter = btn.dataset.filter;
+        document.querySelectorAll('.menu-card').forEach(card => {
+          const show = filter === 'all' || card.dataset.cat === filter;
+          card.style.display = show ? '' : 'none';
+        });
+      });
+    });
+  </script>
+</body>
+</html>
